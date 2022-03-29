@@ -2,13 +2,14 @@ import { useState } from 'react';
 import './App.css';
 
 const sM = 5;  //sizeMargin
-const wC = 5; //winCount
+const baseSizeX = 20;
+const baseSizeY = 20;
+
 let endGame = false;
 
 
 function arrayNulls (size) {
   return new Array(size).fill({value:null, win:false});
-
 }
 
 
@@ -27,19 +28,19 @@ return fieldTemp;
 function App() {
   
 
-  //const [winCells, setWinCells] = useState ([]);
-  const [sizeX, setSizeX] = useState(20);
-  const [sizeY, setSizeY] = useState(20);
-  const [field, setField] = useState(initialField(sizeX, sizeY));  
+  const [sizeX, setSizeX] = useState(baseSizeX);
+  const [sizeY, setSizeY] = useState(baseSizeY);
+  const [field, setField] = useState(initialField(baseSizeX, baseSizeY));  
   const [turn, setTurn] = useState(1);
 
   const [winAmount, setWinAmount] = useState(5);
+  const [temporalInput, setTemporalInput] = useState();
 
   const clicked = (x, y) => {
     if (endGame) {
-      setSizeX(20);
-      setSizeY(20);
-      setField(initialField(20,20));
+      setSizeX(baseSizeX);
+      setSizeY(baseSizeY);
+      setField(initialField(baseSizeX,baseSizeY));
       setTurn(1);
       endGame = false;
     }
@@ -173,7 +174,7 @@ function App() {
     let result = [[x, y]];
     for (let v of vectors) {
       let vCheck = checkBothSidez (fieldBI, x, y, turn, ...v);
-      if (vCheck.length >= wC-1) {
+      if (vCheck.length >= winAmount-1) {
         result = [...result, ...vCheck];
         win = true;
       }
@@ -182,17 +183,59 @@ function App() {
     else return false;
   }
 
+  const ifEnter = (event) => {
+    if (event.key === 'Enter') {
+      applyWinAmount();      
+    }
+  }
+
+  const applyWinAmount = () => {
+    const newWin = parseInt(temporalInput);
+        if (newWin > 2) {
+          setWinAmount(newWin);
+          
+          setTemporalInput('');
+          if (newWin !== winAmount) {
+            setSizeX(baseSizeX);
+            setSizeY(baseSizeY);
+            setField(initialField(baseSizeX,baseSizeY));
+            setTurn(1);
+            endGame = false;
+          }
+        }
+        else {
+          setTemporalInput('');
+          alert('Введите число не меньше трех');
+
+        }
+    }
 
 
 	return (
 		<div className="App">
-			<h2>XOXO-react by Shu</h2>
+			<h1 className='title'>XOXO-react by Shu</h1>
       {/* <input className='input input-sizeX' placeholder='enter sizeX'></input>
-      <input className='input input-sizeY' placeholder='enter sizeY'></input>
-      <input className='input input-win-amount' placeholder='enter win amount'></input>
-       */}
-
-      <h3 className={'endgame-header-'+endGame}>{turn===0?'Крестики выиграли! Нажмите куда-нибудь для старта новой игры.':'Нолики выиграли! Нажмите куда-нибудь для старта новой игры.'} </h3>
+      <input className='input input-sizeY' placeholder='enter sizeY'></input>*/}
+      <div className='wrap-input-win-amount'>
+        <input 
+          className='input input-win-amount' 
+          placeholder='Сколько ячеек для победы?'
+          onKeyUp={ifEnter}
+          onChange={(event) => {
+            setTemporalInput(event.target.value);
+            console.log(event.target.value);
+          }}
+          value={temporalInput}
+        />
+        <button 
+          className='button button-input-win-amount'
+          onClick={() => applyWinAmount()}
+        >Ok</button>
+      </div>
+       
+      <h2 className={'endgame-header-'+endGame}>{turn===0?'Крестики выиграли!':'Нолики выиграли!'} Нажмите на поле для старта новой игры.</h2>
+      <h3 className={'win-amount-header'}>Для победы нужно собрать: {winAmount} ячеек в ряд</h3>
+      <h3 className={'turn-header-'+endGame}>Ходят: {turn===0 ? 'Нолики':'Крестики'}</h3>
        <Field
             field={field}
             clicked={(x, y) => clicked(x, y)}

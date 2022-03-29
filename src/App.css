@@ -7,6 +7,10 @@
     align-content: center;
 }
 
+.title {
+    margin-left: 20px;  
+}
+
 .td-0-false {
     background-color: rgb(70, 73, 255);
 }
@@ -24,12 +28,66 @@
 
 .endgame-header-true {
     display: block;
+    color:brown;
+    margin-left: 20px;
 
 }
 
 .endgame-header-false {
     display:none;
+    margin-left: 20px;
     
+}
+.win-amount-header {
+    margin-left: 20px;
+}
+
+.turn-header-true {
+    display: none;
+    margin-left: 20px;
+
+}
+
+.turn-header-false {
+    display:block;
+    margin-left: 20px;
+    
+}
+
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.wrap-input-win-amount{
+    display: flex;
+    align-items: center;
+    height:30px;
+    
+
+}
+
+.input-win-amount {
+    border-width: 1px;
+    padding-left: 5px;
+    margin-left: 20px;
+    width: 200px;
+    height: 94%;
+    border-radius: 5px;
+
+}
+
+.button-input-win-amount {
+    border-style: inset;
+    border-width: 1px;
+    padding: 0;
+    height: 100%;
+    margin-left: 3px;
+    width:50px;
+    border-radius: 5px;
+
 }
 
 .main-table {
