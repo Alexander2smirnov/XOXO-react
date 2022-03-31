@@ -2,7 +2,7 @@
     width: 30px;
     height: 30px;
     border-color: black;
-    border-style: solid;
+    border-style:dashed;
     border-width: 1px;
     align-content: center;
 }
@@ -12,18 +12,29 @@
 }
 
 .td-0-false {
-    background-color: rgb(70, 73, 255);
+    background-image: url(../public/O.png);
+    background-size: contain;
+    opacity: 0.8;
 }
 .td-0-true {
-    background-color: rgb(2, 3, 71);
+    background-image: url(../public/O.png);
+    background-size: contain;
+    background-color: rgba(255, 2, 36, 0.678);
+    opacity: 0.8;
 }
 
 .td-1-false {
-    background-color: rgb(25, 255, 75);
+    background-image: url(../public/X.png);
+    background-size: contain;
+    opacity: 0.8;
+
 }
 
 .td-1-true {
-    background-color: rgb(0, 153, 0);
+    background-image: url(../public/X.png);
+    background-size: contain;
+    background-color: rgb(179, 32, 51);
+    opacity: 0.8;
 }
 
 .endgame-header-true {
@@ -55,8 +66,8 @@
 }
 
 table {
-    border-spacing: 0;
-    border-collapse: collapse;
+    /* border-spacing: 0; */
+    border-collapse:collapse;
     margin-left: 20px;
     margin-top: 10px;
 }
@@ -74,7 +85,7 @@ table {
     padding-left: 5px;
     margin-left: 20px;
     width: 200px;
-    height: 94%;
+    height: 85%;
     border-radius: 5px;
 
 }

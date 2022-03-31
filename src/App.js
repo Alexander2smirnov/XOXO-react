@@ -258,7 +258,7 @@ function Field ({field, clicked}) {
                 onClick={() => clicked(x, y)}
                 className={'td td-'+td.value+'-'+td.win}             
               >
-                {td.value}
+                
               </td>
             })}
             </tr>
