@@ -1,23 +1,19 @@
 import { useState } from 'react';
 import './App.css';
 
-const sM = 5;  //sizeMargin
+const sM = 5;  
 const baseSizeX = 20;
 const baseSizeY = 20;
 
-let endGame = false;
-
-
-function arrayNulls (size) {
+function arrayNulls(size) {
   return new Array(size).fill({value:null, win:false});
 }
 
-
 function initialField (sizeX, sizeY) {
   const fieldTemp = [];
-  for (let i=0; i<sizeY; i++){
+  for (let i = 0; i <  sizeY; i++){
     fieldTemp [i] = [];
-    for (let j=0; j<sizeX; j++) {
+    for (let j = 0; j < sizeX; j++) {
       fieldTemp [i] [j] = {value:null, win: false};
 
     }
@@ -26,8 +22,7 @@ return fieldTemp;
 }
 
 function App() {
-  
-
+  const [endGame, setEndGame] = useState(false);
   const [sizeX, setSizeX] = useState(baseSizeX);
   const [sizeY, setSizeY] = useState(baseSizeY);
   const [field, setField] = useState(initialField(baseSizeX, baseSizeY));  
@@ -42,18 +37,17 @@ function App() {
       setSizeY(baseSizeY);
       setField(initialField(baseSizeX,baseSizeY));
       setTurn(1);
-      endGame = false;
-    }
-
-    else {
+      setEndGame(false);
+    } else {
       let result = null;
       const fieldAfterTurn = field.map((tr, ind) => {
         if (ind !== y) return tr;
+        
         else return tr.map((td, ind) => {
           if (ind !== x) return td;
+          
           else if (td.value === null) { 
             result = turn;
-            // console.log(x +' '+ y);
             setTurn ((turn + 1)%2);
             return {value:turn, win:false};
             }  
@@ -61,73 +55,65 @@ function App() {
         })
       })
 
-
       if (result !== null) {
         const ifWin = checkWin (fieldAfterTurn, x, y, turn);
+
         if (ifWin) {
-          endGame = true;
+          setEndGame(true);
           const afterWin = applyWin(ifWin, fieldAfterTurn);
           const afterXIncrease = increaseFieldX(afterWin, x)
           const afterYIncrease = increaseFieldY (afterXIncrease, y);
           setField(afterYIncrease);
-
-        }
-        else {const afterXIncrease = increaseFieldX(fieldAfterTurn, x)
+        } else {
+          const afterXIncrease = increaseFieldX(fieldAfterTurn, x)
           const afterYIncrease = increaseFieldY (afterXIncrease, y);
           setField(afterYIncrease);
         }
-        
-        
       }
-
       return turn;
   }
 }
   
 
   const applyWin = (array, field) => {
-    console.log(array);
     const result = field.map((tr, y) => {
       return tr.map((td, x) => {
         for (let a of array) {
           if (x === a[0] && y === a[1]) {
             const hooray = {value: td.value, win:true};
-            //console.log(hooray);
             return hooray;
           }
         }
         return td;
       })
     })
-
     return result;
   };
 
   const increaseFieldX = (fieldAfterTurn, x) => {
-    
     if (x < sM) {
       const newField = fieldAfterTurn.map(row => [...arrayNulls(sM-x), ...row])
-      // console.log (newField);
       setSizeX(newField[0].length);
-      return newField;
-             
-    }
+      return newField; 
+    } 
+    
     else if (x > sizeX-1-sM) {
       const newField = fieldAfterTurn.map(row => [...row, ...arrayNulls(x - sizeX + 1 + sM)])
-      // console.log (newField);
       setSizeX(newField[0].length);
       return newField;
     }
     else return fieldAfterTurn;
-  }
+  };
 
   const increaseFieldY = (fieldAfterIncreaseX, y) => {
     const newSizeX = fieldAfterIncreaseX[0].length;
+    
     if (y < sM) {
       const newField = [...initialField (newSizeX, sM-y), ...fieldAfterIncreaseX];
       setSizeY(newField.length);
       return newField;
     } 
+    
     else if (y > sizeY-1-sM) {
       const newField = [...fieldAfterIncreaseX, ...initialField(newSizeX, y-(sizeY-1-sM))];
       setSizeY(newField.length);
@@ -139,27 +125,24 @@ function App() {
   const checkVector = (fieldBI, x, y, turn, vX, vY) => { //field before increase
     let count = 1;
     const result = [];
+
     while (
       y + count*vY < sizeY &&
       x + count*vX < sizeX &&
       x + count*vX >= 0 &&
       y + count*vY >= 0 &&
       fieldBI[y + count*vY][x + count*vX].value === turn
-      ) {
-        
+    ) {
       result.push([x + count*vX, y + count*vY]);
       count++;
     }
     return result; 
-    
   };  
 
   const checkBothSidez = (fieldBI, x, y, turn, vX, vY) => {
     const plus = checkVector(fieldBI, x, y, turn, vX, vY);
     const minus = checkVector(fieldBI, x, y, turn, -vX, -vY);
-    // console.log([...plus, ...minus]);
     return [...plus, ...minus];
-
   }
 
 
@@ -200,7 +183,7 @@ function App() {
             setSizeY(baseSizeY);
             setField(initialField(baseSizeX,baseSizeY));
             setTurn(1);
-            endGame = false;
+            setEndGame(false);
           }
         }
         else {
@@ -214,8 +197,6 @@ function App() {
 	return (
 		<div className="App">
 			<h1 className='title'>XOXO-react by Shu</h1>
-      {/* <input className='input input-sizeX' placeholder='enter sizeX'></input>
-      <input className='input input-sizeY' placeholder='enter sizeY'></input>*/}
       <div className='wrap-input-win-amount'>
         <input 
           className='input input-win-amount' 
@@ -233,10 +214,26 @@ function App() {
         >Ok</button>
       </div>
        
-      <h2 className={'endgame-header-'+endGame}>{turn===0?'Крестики выиграли!':'Нолики выиграли!'} Нажмите на поле для старта новой игры.</h2>
-      <h3 className={'win-amount-header'}>Для победы нужно собрать: {winAmount} ячеек в ряд</h3>
-      <h3 className={'turn-header-'+endGame}>Ходят: {turn===0 ? 'Нолики':'Крестики'}</h3>
-       <Field
+      <h2 
+        className={'endgame-header-' + endGame}
+      >
+        {turn === 0?'Крестики выиграли!':'Нолики выиграли!'} 
+        Нажмите на поле для старта новой игры.
+      </h2>
+
+      <h3 
+        className={'win-amount-header'}
+      >
+        Для победы нужно собрать: {winAmount} ячеек в ряд
+      </h3>
+      
+      <h3 
+        className={'turn-header-'+endGame}
+      >
+        Ходят: {turn===0 ? 'Нолики':'Крестики'}
+      </h3>
+      
+      <Field
             field={field}
             clicked={(x, y) => clicked(x, y)}
       />
@@ -244,53 +241,30 @@ function App() {
 	);
 }
 
-function Field ({field, clicked}) {
+function Field({field, clicked}) {
   return(
     <table className='main-table'>
       <tbody>
-        {field.map((tr, y) => {
-          return <tr
-          key={y}
+        {field.map((tr, y) => {return (
+          <tr
+            key={y}
           >
             {tr.map((td, x) => {
-              return <td
-                key={x + ' '+ y}
-                onClick={() => clicked(x, y)}
-                className={'td td-'+td.value+'-'+td.win}             
-              >
-                
-              </td>
+              return (
+                <td
+                  key={x + ' '+ y}
+                  onClick={() => clicked(x, y)}
+                  className={'td td-'+td.value+'-'+td.win}             
+                >
+                </td>
+              )
             })}
-            </tr>
-        })}
+          </tr>
+        )})}
       </tbody>
     </table>
   )
 }
-
-
-  // <div className="">
-
-
-	// 	<input
-	// 		className="list-checkbox"
-	// 		type="checkbox" 
-	// 		onChange={(event) => onItemToggle(event.target.checked)}
-	// 		checked={isDone}
-	// 	/>
-	// 	{title}
-	// 	<button 
-	// 		className="button-delete"
-	// 		onClick={(event) => onDelete()}
-	// 	>
-	// 		<img src={bin}/>
-	// 	</button>
-	// </div>
-
-
-
-
-
 
 export default App;
 
